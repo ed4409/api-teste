@@ -1,11 +1,7 @@
-import express from 'express';
-import multer from 'multer';
-import ExampleController from './controllers/exampleController';
-
+const express = require('express');
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
-
-const exampleController = new ExampleController();
+const multer = require('multer');
+const upload = multer({ dest: 'src/uploads/' }); 
 
 /**
  * @swagger
@@ -24,7 +20,9 @@ const exampleController = new ExampleController();
  *                 message:
  *                   type: string
  */
-router.get('/hello', exampleController.getHello);
+router.get('/hello', (req, res) => {
+  return res.json({ message: 'Hello World!' });
+});
 
 /**
  * @swagger
@@ -53,7 +51,14 @@ router.get('/hello', exampleController.getHello);
  *                 result:
  *                   type: number
  */
-router.post('/square', exampleController.postSquare);
+router.post('/square', (req, res) => {
+  const { number } = req.body;
+  if (typeof number !== 'number') {
+    return res.status(400).json({ error: 'O parâmetro "number" deve ser um número.' });
+  }
+  const square = number * number;
+  return res.json({ result: square });
+});
 
 /**
  * @swagger
@@ -88,6 +93,14 @@ router.post('/square', exampleController.postSquare);
  *                 error:
  *                   type: string
  */
-router.post('/upload', upload.single('zipFile'), exampleController.postUpload);
+router.post('/upload', upload.single('zipFile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+  }
 
-export default router;
+  // Aqui você pode tratar o arquivo ZIP recebido, por exemplo, salvar no sistema de arquivos, descompactar, etc.
+
+  return res.json({ message: 'Arquivo ZIP recebido com sucesso!' });
+});
+
+module.exports = router;

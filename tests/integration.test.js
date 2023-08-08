@@ -1,6 +1,6 @@
 // tests/integration.test.js
 import request from 'supertest';
-import app from '../app'; // Importe o arquivo app.js ou o módulo express do seu aplicativo
+import app from '..'; // Importe o arquivo app.js ou o módulo express do seu aplicativo
 
 describe('Integration Tests', () => {
   it('should return "Hello World" when accessing /example/hello', async () => {
